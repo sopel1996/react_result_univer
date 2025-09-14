@@ -1,3 +1,22 @@
+/*
+
+Реализуйте хук useHover(), который можно будет использовать следующим образом:
+
+import { useHover } from './useHover';
+
+function Demo() {
+  const { hovered, ref } = useHover();
+
+  return (
+    <div ref={ref}>
+      {hovered ? 'На меня навели мышку' : 'Наведи мышкой на меня'}
+    </div>
+  );
+}
+
+*/
+
+
 import { useState, useRef, useCallback, useEffect } from 'react';
 
 export const useHover = () => {
