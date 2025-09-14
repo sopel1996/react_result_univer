@@ -28,36 +28,15 @@ toggle('dark'); // -> value === 'dark'
 
 */
 
-import { useReducer, useCallback } from 'react';
+import { useReducer } from 'react';
 
-function toggleReducer(state, action, values) {
-  switch (action.type) {
-    case 'TOGGLE': {
-      const currentIndex = values.indexOf(state);
-      const nextIndex = (currentIndex + 1) % values.length;
-      return values[nextIndex];
-    }
-    case 'SET': {
-      return values.includes(action.value) ? action.value : state;
-    }
-    default:
-      return state;
-  }
-}
+export function useToggle(options = [false, true]) {
+  const [[option], toggle] = useReducer((state, action) => {
+    const value = action instanceof Function ? action(state[0]) : action;
+    const index = Math.abs(state.indexOf(value));
 
-export function useToggle(values = [false, true]) {
-  const [state, dispatch] = useReducer(
-    (state, action) => toggleReducer(state, action, values),
-    values[0]
-  );
+    return state.slice(index).concat(state.slice(0, index));
+  }, options);
 
-  const toggle = useCallback((value) => {
-    if (value !== undefined) {
-      dispatch({ type: 'SET', value });
-    } else {
-      dispatch({ type: 'TOGGLE' });
-    }
-  }, []);
-
-  return [state, toggle];
+  return [option, toggle];
 }
